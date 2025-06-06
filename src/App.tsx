@@ -13,14 +13,6 @@ function App() {
     setProjects(prev => [...prev, newProject]);
   };
 
-  const handleUpdateProject = (updatedProject: Project) => {
-    setProjects(prev => 
-      prev.map(project => 
-        project.id === updatedProject.id ? updatedProject : project
-      )
-    );
-  };
-
   const handleDeleteProject = (projectId: string) => {
     setProjects(prev => prev.filter(project => project.id !== projectId));
   };
@@ -44,24 +36,12 @@ function App() {
             path="/projects/new" 
             element={<ProjectForm onSubmit={handleCreateProject} />} 
           />
-
-          {/* Edit Project Page */}
-          <Route 
-            path="/projects/:id/edit" 
-            element={
-              <EditProjectWrapper 
-                findProjectById={findProjectById} 
-                onSubmit={handleUpdateProject} 
-              />
-            } 
-          />
           
           {/* Project Details Page */}
           <Route 
             path="/projects/:id" 
             element={<ProjectDetailsWrapper 
               findProjectById={findProjectById} 
-              onStatusUpdate={handleUpdateProject}
               onDelete={handleDeleteProject}
               />} 
           />
@@ -93,13 +73,11 @@ function App() {
 
 interface ProjectDetailsWrapperProps {
   findProjectById: (id: string) => Project | undefined;
-  onStatusUpdate: (project: Project) => void; 
   onDelete: (id: string) => void; 
 }
 
 const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ 
   findProjectById, 
-  onStatusUpdate, 
   onDelete 
 }) => {
   const { id } = useParams<{ id: string }>();
@@ -125,38 +103,7 @@ const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({
 return (
   <ProjectDetails 
     project={project} 
-    onStatusUpdate={onStatusUpdate}
     onDelete={onDelete}
-  />
-);
-}
-
-  interface EditProjectWrapperProps {
-    findProjectById: (id: string) => Project | undefined;
-    onSubmit: (project: Project) => void;
-  }
-  
-  const EditProjectWrapper: React.FC<EditProjectWrapperProps> = ({ 
-    findProjectById, 
-    onSubmit 
-  }) => {
-    const { id } = useParams<{ id: string }>();
-    
-    if (!id) {
-      return <Navigate to="/projects" replace />;
-    }
-    
-    const project = findProjectById(id);
-    
-    if (!project) {
-      return <Navigate to="/projects" replace />;
-    }
-
-  return (
-  <ProjectForm 
-  onSubmit={onSubmit} 
-  initialProject={project}
-  isEditing
   />
 );
 }

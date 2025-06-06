@@ -43,12 +43,6 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
       {projects.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg mb-4">No projects yet</p>
-          <Link
-            to="/projects/new"
-            className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          >
-            Create Your First Project
-          </Link>
         </div>
       ) : (
         <div className="grid gap-4">
@@ -76,12 +70,6 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
               
               <div className="flex justify-between items-center text-sm text-gray-500">
                 <span>Start Date: {formatDate(project.startDate)}</span>
-                <Link
-                  to={`/projects/${project.id}`}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
-                >
-                  View Details →
-                </Link>
                 <button
                     onClick={() => {
                       if (confirm('Are you sure you want to delete this project?')) {
