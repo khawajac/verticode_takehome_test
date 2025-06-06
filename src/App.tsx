@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Project } from './models/Project';
 import { ProjectForm } from './components/ProjectForm';
-// import { ProjectDetails } from './components/ProjectDetails';
+import { ProjectDetails } from './components/ProjectDetails';
 
 export default function App() {
   const [project, setProject] = useState<Project | null>(null); 
