@@ -1,10 +1,9 @@
 export interface Project {
   id: string; 
   name: string; 
-  descripton: string; 
+  description: string; 
   startDate: string; 
   status?: 'planning' | 'in progress' | 'completed'; 
-  isCompleted: boolean; 
   createdAt: string; 
 }
 
