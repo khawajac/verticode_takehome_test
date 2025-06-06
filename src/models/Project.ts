@@ -8,4 +8,4 @@ export interface Project {
   createdAt: string; 
 }
 
-export type ProjectFormData = omit<PromiseRejectionEvent, 'id'>
+export type ProjectFormData = Omit<Project, 'id'>
