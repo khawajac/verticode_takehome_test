@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../models/Project';
 
 interface ProjectDetailsProps {
@@ -6,6 +7,7 @@ interface ProjectDetailsProps {
 }
 
 export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
+  const navigate = useNavigate(); 
   const [status, setStatus] = useState(project.status);
 
   const formatDate = (date: Date) => {
@@ -35,6 +37,12 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <button
+        onClick={() => navigate('/projects')}
+        className="mb-4 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+      >
+        ← Back to Projects
+      </button>
       <h1 className="text-3xl font-bold mb-6">Project Details</h1>
       
       {/* project card */}

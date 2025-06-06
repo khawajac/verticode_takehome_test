@@ -40,7 +40,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
 
     if (validate()) {
       const newProject: Project = {
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        id: Date.now().toString(36) + Math.random().toString(36),
         name, 
         description, 
         startDate, 
@@ -50,7 +50,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
 
       onSubmit(newProject); 
       
-      // Navigate to the new project's details page
       navigate(`/projects/${newProject.id}`);
     }
   };
