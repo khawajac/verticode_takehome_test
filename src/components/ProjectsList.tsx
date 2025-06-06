@@ -3,9 +3,10 @@ import { Project } from '../models/Project';
 
 interface ProjectsListProps {
   projects: Project[];
+  onDelete: (projectId: string) => void; 
 }
 
-export const ProjectsList: React.FC<ProjectsListProps> = ({ projects }) => {
+export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }) => {
   const getStatusColor = (status?: Project['status']) => {
     switch (status) {
       case 'planning':
@@ -81,6 +82,16 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects }) => {
                 >
                   View Details →
                 </Link>
+                <button
+                    onClick={() => {
+                      if (confirm('Are you sure you want to delete this project?')) {
+                        onDelete(project.id);
+                      }
+                    }}
+                    className="text-red-600 hover:text-red-800 font-medium"
+                  >
+                    Delete
+                  </button>
               </div>
             </div>
           ))}

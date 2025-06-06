@@ -5,6 +5,8 @@ import { Project } from '../models/Project';
 
 interface ProjectFormProps {
   onSubmit: (project: Project) => void;
+  initialProject?: Project
+  isEditing?: boolean;  
 }
 
 export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {

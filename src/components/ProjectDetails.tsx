@@ -4,6 +4,8 @@ import { Project } from '../models/Project';
 
 interface ProjectDetailsProps {
   project: Project;
+  onStatusUpdate: (project: Project) => void; 
+  onDelete: (id: string) => void; 
 }
 
 export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project }) => {

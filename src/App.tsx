@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { Project } from './models/Project';
 import { ProjectsList } from './components/ProjectsList';
@@ -13,6 +13,18 @@ function App() {
     setProjects(prev => [...prev, newProject]);
   };
 
+  const handleUpdateProject = (updatedProject: Project) => {
+    setProjects(prev => 
+      prev.map(project => 
+        project.id === updatedProject.id ? updatedProject : project
+      )
+    );
+  };
+
+  const handleDeleteProject = (projectId: string) => {
+    setProjects(prev => prev.filter(project => project.id !== projectId));
+  };
+
   const findProjectById = (id: string) => {
     return projects.find(project => project.id === id);
   };
@@ -24,7 +36,7 @@ function App() {
           {/* Projects List Page */}
           <Route 
             path="/projects" 
-            element={<ProjectsList projects={projects} />} 
+            element={<ProjectsList projects={projects} onDelete={handleDeleteProject} />} 
           />
           
           {/* Create New Project Page */}
@@ -32,11 +44,26 @@ function App() {
             path="/projects/new" 
             element={<ProjectForm onSubmit={handleCreateProject} />} 
           />
+
+          {/* Edit Project Page */}
+          <Route 
+            path="/projects/:id/edit" 
+            element={
+              <EditProjectWrapper 
+                findProjectById={findProjectById} 
+                onSubmit={handleUpdateProject} 
+              />
+            } 
+          />
           
           {/* Project Details Page */}
           <Route 
             path="/projects/:id" 
-            element={<ProjectDetailsWrapper findProjectById={findProjectById} />} 
+            element={<ProjectDetailsWrapper 
+              findProjectById={findProjectById} 
+              onStatusUpdate={handleUpdateProject}
+              onDelete={handleDeleteProject}
+              />} 
           />
           
           {/* Redirect root to projects list */}
@@ -64,13 +91,17 @@ function App() {
   );
 }
 
-import { useParams, Navigate } from 'react-router-dom';
-
 interface ProjectDetailsWrapperProps {
   findProjectById: (id: string) => Project | undefined;
+  onStatusUpdate: (project: Project) => void; 
+  onDelete: (id: string) => void; 
 }
 
-const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ findProjectById }) => {
+const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ 
+  findProjectById, 
+  onStatusUpdate, 
+  onDelete 
+}) => {
   const { id } = useParams<{ id: string }>();
   
   if (!id) {
@@ -90,8 +121,44 @@ const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ findProje
       </div>
     );
   }
+
+return (
+  <ProjectDetails 
+    project={project} 
+    onStatusUpdate={onStatusUpdate}
+    onDelete={onDelete}
+  />
+);
+}
+
+  interface EditProjectWrapperProps {
+    findProjectById: (id: string) => Project | undefined;
+    onSubmit: (project: Project) => void;
+  }
   
-  return <ProjectDetails project={project} />;
-};
+  const EditProjectWrapper: React.FC<EditProjectWrapperProps> = ({ 
+    findProjectById, 
+    onSubmit 
+  }) => {
+    const { id } = useParams<{ id: string }>();
+    
+    if (!id) {
+      return <Navigate to="/projects" replace />;
+    }
+    
+    const project = findProjectById(id);
+    
+    if (!project) {
+      return <Navigate to="/projects" replace />;
+    }
+
+  return (
+  <ProjectForm 
+  onSubmit={onSubmit} 
+  initialProject={project}
+  isEditing
+  />
+);
+}
 
 export default App; 
