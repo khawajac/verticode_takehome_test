@@ -30,6 +30,7 @@ function App() {
   };
 
   return (
+    <div className="font-light tracking-tight leading-tight">
     <Router>
       <header className="flex h-24 bg-light-green">
           <img src="/logo.png" height={64} className="h-16 m-auto" />
@@ -66,7 +67,8 @@ function App() {
               <div className="max-w-md mx-auto text-center">
                 <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
                 <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
-                <a href="/projects" className="text-blue-600 hover:text-blue-800">
+                <a href="/projects" className="mb-8 bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 hover:shadow-lg font-medium px-6 py-3 rounded-2xl"
+                >
                   Go back to Projects
                 </a>
               </div>
@@ -75,6 +77,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </div>
   );
 }
 
@@ -101,7 +104,8 @@ const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({
       <div className="max-w-md mx-auto text-center">
         <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
         <p className="text-gray-600 mb-4">The project you're looking for doesn't exist.</p>
-        <a href="/projects" className="text-blue-600 hover:text-blue-800">
+        <a href="/projects" className="mb-8 bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 hover:shadow-lg font-medium px-6 py-3 rounded-2xl"        
+        >
           Go back to Projects
         </a>
       </div>

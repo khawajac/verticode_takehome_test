@@ -57,14 +57,17 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
       <div className="max-w-lg mx-auto">
         <button
           onClick={() => navigate('/projects')}
-          className="mb-4 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-        >
+          className="mb-8 bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50 transition-all duration-300 hover:shadow-lg font-medium px-6 py-3 rounded-2xl"        
+          >
           ← Back to Projects
         </button>
 
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20 border-l-8 border-l-amber-400">
         <form onSubmit={handleSubmit}>
-          <h1 className="text-2xl font-bold mb-6">Create New Project</h1>
+        <h1 className="text-2xl font-bold mb-6 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent flex items-center gap-2">
+          <span className="text-amber-600">📋</span> Create New Project
+        </h1>
+
           
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium mb-2">

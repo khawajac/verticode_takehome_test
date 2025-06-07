@@ -112,8 +112,8 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              My Projects
+          <h1 className="text-5xl font-extralight text-gray-900 tracking-tight leading-tight">
+          My Projects
             </h1>
             <p className="text-gray-600 mt-2">Manage and track your project progress</p>
           </div>
