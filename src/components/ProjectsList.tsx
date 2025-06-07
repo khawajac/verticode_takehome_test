@@ -26,17 +26,54 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
     }
     return filtered; 
   }, [projects, searchTerm, statusFilter]); 
+
+  const groupedProjects = useMemo(() => {
+    const statusOrder = ['planning', 'in progress', 'completed'];
+    const grouped = filteredProjects.reduce((acc, project) => {
+      const status = project.status || 'planning';
+      if (!acc[status]) acc[status] = [];
+      acc[status].push(project);
+      return acc;
+    }, {} as Record<string, Project[]>);
+
+    return statusOrder.map(status => ({
+      status,
+      projects: grouped[status] || [],
+      count: grouped[status]?.length || 0
+    })).filter(group => group.count > 0);
+  }, [filteredProjects]);
+
   
-  const getStatusColor = (status?: Project['status']) => {
+  const getStatusConfig = (status?: Project['status']) => {
     switch (status) {
       case 'planning':
-        return 'bg-yellow-100 text-yellow-800';
+        return {
+          color: 'bg-amber-100 text-amber-800 border-amber-200',
+          icon: '📋',
+          gradient: 'from-amber-50 to-orange-50',
+          accent: 'border-l-amber-400'
+        };
       case 'in progress':
-        return 'bg-blue-100 text-blue-800';
+        return {
+          color: 'bg-blue-100 text-blue-800 border-blue-200',
+          icon: '🚀',
+          gradient: 'from-blue-50 to-indigo-50',
+          accent: 'border-l-blue-400'
+        };
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return {
+          color: 'bg-green-100 text-green-800 border-green-200',
+          icon: '✅',
+          gradient: 'from-green-50 to-emerald-50',
+          accent: 'border-l-green-400'
+        };
       default:
-        return 'bg-gray-100 text-gray-800';
+        return {
+          color: 'bg-gray-100 text-gray-800 border-gray-200',
+          icon: '📄',
+          gradient: 'from-gray-50 to-slate-50',
+          accent: 'border-l-gray-400'
+        };
     }
   };
 
@@ -65,17 +102,32 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
     setStatusFilter('');
   }
 
+  const getStatusTitle = (status: string) => {
+    return status === 'in progress' ? 'In Progress' : 
+           status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">My Projects</h1>
-        <Link
-          to="/projects/new"
-          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-        >
-          + New Project
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              My Projects
+            </h1>
+            <p className="text-gray-600 mt-2">Manage and track your project progress</p>
+          </div>
+          <Link
+            to="/projects/new"
+            className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl shadow-lg"
+          >
+            <span className="flex items-center gap-2">
+              <span className="text-lg">+</span>
+              New Project
+            </span>
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 rounded-xl transition-opacity duration-300"></div>
+          </Link>
+        </div>
 
       {/* filter and search section */}
       <div className="mb-6 space-y-4">
@@ -167,7 +219,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                     {project.description}
                   </p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(project.status)}`}>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusConfig(project.status)}`}>
                   {project.status?.toUpperCase()}
                 </span>
               </div>
@@ -189,6 +241,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           ))}
         </div>
       )}
+    </div>
     </div>
     </div>
   );
