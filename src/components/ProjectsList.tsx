@@ -9,16 +9,23 @@ interface ProjectsListProps {
 
 export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); 
+  const [statusFilter, setStatusFilter] = useState<string>('');
 
   const filteredProjects = useMemo(() => {
-    if(!searchTerm.trim() || searchTerm.trim().length < 3) return projects; 
+    let filtered = projects; 
 
-    const lowerCaseSearch = searchTerm.toLowerCase(); 
+    if (statusFilter) {
+      filtered = filtered.filter(project => project.status === statusFilter);
+    }
 
-    return projects.filter(project => 
-      project.name.toLowerCase().includes(lowerCaseSearch)
-    ); 
-  }, [projects, searchTerm]); 
+    if (searchTerm.trim() && searchTerm.trim().length >= 3) {
+      const lowerCaseSearch = searchTerm.toLowerCase();
+      filtered = filtered.filter(project => 
+        project.name.toLowerCase().includes(lowerCaseSearch)
+      );
+    }
+    return filtered; 
+  }, [projects, searchTerm, statusFilter]); 
   
   const getStatusColor = (status?: Project['status']) => {
     switch (status) {
@@ -45,8 +52,17 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
     setSearchTerm(e.target.value); 
   }
 
+  const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(e.target.value);
+  }
+
   const clearSearch = () => {
     setSearchTerm(''); 
+  }
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('');
   }
 
   return (
@@ -60,6 +76,33 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           + New Project
         </Link>
       </div>
+
+      {/* filter and search section */}
+      <div className="mb-6 space-y-4">
+        <div className="flex items-center gap-4">
+          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">
+            Filter by status:
+          </label>
+          <select
+            id="status-filter"
+            value={statusFilter}
+            onChange={handleStatusFilterChange}
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">All</option>
+            <option value="planning">Planning</option>
+            <option value="in progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+          {(statusFilter || searchTerm) && (
+            <button
+              onClick={clearFilters}
+              className="text-sm text-gray-500 hover:text-gray-700 underline"
+            >
+              Clear all filters
+            </button>
+          )}
+        </div>
       <div className="relative mb-6">
         <input
           type="text"
@@ -77,19 +120,20 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           </button>
         )}
       </div>
-      {searchTerm && searchTerm.length >= 3 && (
+      {(searchTerm && searchTerm.length >= 3) || statusFilter ? (
         <div className="mb-4 text-sm text-gray-600">
-          Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} 
-          for "{searchTerm}"
+          Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
+          {statusFilter && ` with status "${statusFilter}"`}
+          {searchTerm && searchTerm.length >= 3 && ` matching "${searchTerm}"`}
         </div>
-      )}
+      ) : null}
       {searchTerm && searchTerm.length < 3 && (
         <div className="mb-4 text-sm text-gray-500">
           Type at least 3 characters to search...
         </div>
       )}
 
-      {projects.length === 0 && searchTerm.length >= 3 ? (
+      {filteredProjects.length === 0 && searchTerm.length >= 3 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg mb-2">No projects found</p>
           <p className="text-gray-400">Try adjusting your search terms</p>
@@ -145,6 +189,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 };
