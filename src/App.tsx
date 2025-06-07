@@ -24,6 +24,9 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50 py-8 px-4">
+        <header className="flex h-24 bg-light-green">
+          <img src="/logo.png" height={64} className="h-16 m-auto" />
+        </header>
         <Routes>
           {/* Projects List Page */}
           <Route 
