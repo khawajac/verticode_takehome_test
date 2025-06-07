@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Project } from '../models/Project';
+import { useState, useMemo } from 'react'; 
 
 interface ProjectsListProps {
   projects: Project[];
@@ -7,6 +8,18 @@ interface ProjectsListProps {
 }
 
 export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }) => {
+  const [searchTerm, setSearchTerm] = useState<string>(''); 
+
+  const filteredProjects = useMemo(() => {
+    if(!searchTerm.trim() || searchTerm.trim().length < 3) return projects; 
+
+    const lowerCaseSearch = searchTerm.toLowerCase(); 
+
+    return projects.filter(project => 
+      project.name.toLowerCase().includes(lowerCaseSearch)
+    ); 
+  }, [projects, searchTerm]); 
+  
   const getStatusColor = (status?: Project['status']) => {
     switch (status) {
       case 'planning':
@@ -28,6 +41,14 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
     });
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value); 
+  }
+
+  const clearSearch = () => {
+    setSearchTerm(''); 
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -39,14 +60,53 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           + New Project
         </Link>
       </div>
+      <div className="relative mb-6">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Search projects by name (min 3 characters)..."
+          className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        {searchTerm && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 text-xl"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+      {searchTerm && searchTerm.length >= 3 && (
+        <div className="mb-4 text-sm text-gray-600">
+          Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} 
+          for "{searchTerm}"
+        </div>
+      )}
+      {searchTerm && searchTerm.length < 3 && (
+        <div className="mb-4 text-sm text-gray-500">
+          Type at least 3 characters to search...
+        </div>
+      )}
 
-      {projects.length === 0 ? (
+      {projects.length === 0 && searchTerm.length >= 3 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg mb-2">No projects found</p>
+          <p className="text-gray-400">Try adjusting your search terms</p>
+          <button
+            onClick={clearSearch}
+            className="mt-4 text-blue-500 hover:text-blue-700 underline"
+            >
+              Clear search
+            </button>
+        </div>
+      ) : projects.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg mb-4">No projects yet</p>
         </div>
-      ) : (
+      ):(
         <div className="grid gap-4">
-          {projects.map((project) => (
+          {filteredProjects.map((project) => (
             <div
               key={project.id}
               className="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow"
