@@ -87,7 +87,6 @@ interface ProjectDetailsWrapperProps {
 const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ 
   findProjectById, 
   onUpdate, 
-  onDelete 
 }) => {
   const { id } = useParams<{ id: string }>();
   
@@ -113,7 +112,6 @@ return (
   <ProjectDetails 
     project={project} 
     onUpdate={onUpdate}
-    onDelete={onDelete}
   />
 );
 }

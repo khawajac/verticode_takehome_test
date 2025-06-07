@@ -5,10 +5,9 @@ import { Project } from '../models/Project';
 interface ProjectDetailsProps {
   project: Project;
   onUpdate: (project: Project) => void;
-  onDelete: (id: string) => void; 
 }
 
-export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdate, onDelete }) => {
+export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdate }) => {
   const navigate = useNavigate(); 
   const [status, setStatus] = useState(project.status);
   const [isEditing, setIsEditing] = useState(false);

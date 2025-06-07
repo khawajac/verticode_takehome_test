@@ -10,7 +10,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-01-10T10:00:00Z'
   },
   {
-    id: '6',
+    id: '2',
     name: 'Customer Support Chatbot',
     description: 'AI-powered chatbot implementation for 24/7 customer support. Features natural language processing, ticket escalation, and integration with existing CRM system.',
     startDate: '2025-02-10',
@@ -18,7 +18,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-02-05T08:30:00Z'
   },
   {
-    id: '7',
+    id: '3',
     name: 'Database Migration & Optimization',
     description: 'Migration from legacy database to modern cloud infrastructure with performance optimization, backup automation, and disaster recovery planning.',
     startDate: '2025-01-20',
@@ -26,7 +26,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-01-15T13:45:00Z'
   },
   {
-    id: '8',
+    id: '4',
     name: 'Inventory Management System',
     description: 'Real-time inventory tracking system with automated reordering, supplier integration, and comprehensive reporting for warehouse operations.',
     startDate: '2025-02-15',
@@ -34,7 +34,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-02-10T10:15:00Z'
   },
   {
-    id: '2', 
+    id: '5', 
     name: 'Mobile App Development',
     description: 'Native iOS and Android application for customer engagement. Features include push notifications, offline mode, social sharing, and integration with existing web platform.',
     startDate: '2025-02-01',
@@ -42,7 +42,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-01-25T14:30:00Z'
   },
   {
-    id: '3',
+    id: '6',
     name: 'Data Analytics Dashboard',
     description: 'Real-time analytics dashboard for business intelligence. Includes customizable charts, automated reporting, data export features, and role-based access control.',
     startDate: '2024-11-01',
@@ -50,7 +50,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2024-10-15T09:15:00Z'
   },
   {
-    id: '4',
+    id: '7',
     name: 'API Integration Project',
     description: 'Integration with third-party services including payment processors, shipping providers, and inventory management systems. Focus on reliability and error handling.',
     startDate: '2025-03-15',
@@ -59,7 +59,7 @@ export const dummyProjects: Project[] = [
   },
 
   {
-    id: '9',
+    id: '8',
     name: 'Marketing Automation Platform',
     description: 'Email marketing automation with segmentation, A/B testing, and personalization features. Integration with social media platforms and analytics tools.',
     startDate: '2025-04-01',
@@ -67,7 +67,7 @@ export const dummyProjects: Project[] = [
     createdAt: '2025-03-10T09:20:00Z'
   },
   {
-    id: '10',
+    id: '9',
     name: 'Employee Training Portal',
     description: 'Learning management system for employee onboarding and continuous education. Features video courses, progress tracking, and certification management.',
     startDate: '2025-05-15',
@@ -76,7 +76,7 @@ export const dummyProjects: Project[] = [
   },
 
   {
-    id: '5',
+    id: '10',
     name: 'Security Audit & Improvements',
     description: 'Comprehensive security review of all systems, implementation of new authentication methods, data encryption upgrades, and compliance with latest security standards.',
     startDate: '2024-12-01',
