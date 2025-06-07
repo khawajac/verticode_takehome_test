@@ -86,9 +86,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
         )}
       </div>
       
-      {/* project card */}
       <div className="bg-white shadow-lg rounded-lg p-6">
-        {/* project name */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-gray-700">Project Name</h2>
           {isEditing ? (
@@ -104,7 +102,6 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
             )}
         </div>
 
-        {/* description */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold text-gray-700">Description</h2>
           {isEditing ? (
@@ -119,7 +116,6 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
       )}
       </div>
 
-      {/* start date */}
       <div className="mb-4">
         <h2 className="text-xl font-semibold text-gray-700">Start Date</h2>
         {isEditing ? (
@@ -134,7 +130,6 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
     )}
       </div>
 
-      {/* status with ability to change */}
       <div className="mb-4">
         <h2 className="text-xl font-semibold text-gray-700 mb-2">Status</h2>
         <div className="flex items-center gap-2">
@@ -142,7 +137,6 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
             {status?.replace('-', ' ').toUpperCase()}
           </span>
           
-          {/* action to mark as complete */}
           {status !== 'completed' && (
             <button
               onClick={() => handleStatusChange('completed')}
@@ -154,7 +148,6 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
         </div>
         </div>
 
-        {/* more status controls */}
         {status === 'completed' && (
           <div className="mt-6 p-4 bg-green-50 rounded-md">
             <p className="text-green-800 font-medium">✓ Project Completed!</p>
