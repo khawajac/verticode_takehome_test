@@ -13,6 +13,14 @@ function App() {
     setProjects(prev => [...prev, newProject]);
   };
 
+  const handleUpdateProject = (updatedProject: Project) => {
+    setProjects(prev => 
+      prev.map(project => 
+        project.id === updatedProject.id ? updatedProject : project
+      )
+    ); 
+  }; 
+
   const handleDeleteProject = (projectId: string) => {
     setProjects(prev => prev.filter(project => project.id !== projectId));
   };
@@ -28,34 +36,30 @@ function App() {
         </header>
       <div className="min-h-screen bg-gray-50 py-8 px-4">
         <Routes>
-          {/* Projects List Page */}
           <Route 
             path="/projects" 
             element={<ProjectsList projects={projects} onDelete={handleDeleteProject} />} 
           />
           
-          {/* Create New Project Page */}
           <Route 
             path="/projects/new" 
             element={<ProjectForm onSubmit={handleCreateProject} />} 
           />
           
-          {/* Project Details Page */}
           <Route 
             path="/projects/:id" 
             element={<ProjectDetailsWrapper 
               findProjectById={findProjectById} 
+              onUpdate={handleUpdateProject}
               onDelete={handleDeleteProject}
               />} 
           />
           
-          {/* Redirect root to projects list */}
           <Route 
             path="/" 
             element={<Navigate to="/projects" replace />} 
           />
           
-          {/* 404 Page */}
           <Route 
             path="*" 
             element={
@@ -76,11 +80,13 @@ function App() {
 
 interface ProjectDetailsWrapperProps {
   findProjectById: (id: string) => Project | undefined;
+  onUpdate: (project: Project) => void; 
   onDelete: (id: string) => void; 
 }
 
 const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({ 
   findProjectById, 
+  onUpdate, 
   onDelete 
 }) => {
   const { id } = useParams<{ id: string }>();
@@ -106,6 +112,7 @@ const ProjectDetailsWrapper: React.FC<ProjectDetailsWrapperProps> = ({
 return (
   <ProjectDetails 
     project={project} 
+    onUpdate={onUpdate}
     onDelete={onDelete}
   />
 );
