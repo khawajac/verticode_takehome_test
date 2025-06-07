@@ -14,6 +14,15 @@ As a bonus task you can also add a status to the form and allow the user to mark
 
 This task is front end only, which means you don't need a database and don't need to store or persist the data.
 
+## Functionality (added by khawajac)
+- Projects List page with full project management
+- React Router for navigation
+- Full CRUD operations (Create, Read, Update, Delete projects)
+- Search and filter functionality for project discovery
+- Clean, responsive UI design
+
+Please see the images in the public folder showing the UI evolution from the original MVP to the current enhanced version.
+
 ## Typescript
 
 This task uses typescript. You can find information about the basics of typescript and a typescript cheat sheet below.
