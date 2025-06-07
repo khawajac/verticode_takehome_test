@@ -55,7 +55,6 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-6">
       <div className="max-w-lg mx-auto">
         <button
           onClick={() => navigate('/projects')}
@@ -159,6 +158,5 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
         </form>
         </div>
       </div>
-    </div>
   );
 };

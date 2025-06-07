@@ -109,7 +109,6 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -276,6 +275,5 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           </div>
         )}
       </div> 
-    </div>  
   );
 };
