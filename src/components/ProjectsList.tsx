@@ -108,6 +108,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
   };
 
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
@@ -129,51 +130,55 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           </Link>
         </div>
 
-      {/* filter and search section */}
-      <div className="mb-6 space-y-4">
-        <div className="flex items-center gap-4">
-          <label htmlFor="status-filter" className="text-sm font-medium text-gray-700">
-            Filter by status:
-          </label>
-          <select
-            id="status-filter"
-            value={statusFilter}
-            onChange={handleStatusFilterChange}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All</option>
-            <option value="planning">Planning</option>
-            <option value="in progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
-          {(statusFilter || searchTerm) && (
-            <button
-              onClick={clearFilters}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
-            >
-              Clear all filters
-            </button>
-          )}
-        </div>
-      <div className="relative mb-6">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search projects by name (min 3 characters)..."
-          className="w-full px-4 py-3 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-        {searchTerm && (
-          <button
-            onClick={clearSearch}
-            className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 text-xl"
-          >
-            ✕
-          </button>
-        )}
+      <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-4 mb-8 shadow-lg border border-white/20">
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <div className="flex items-center gap-3">
+              <label htmlFor="status-filter" className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                Filter:
+              </label>
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={handleStatusFilterChange}
+                className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
+              >
+                <option value="">All</option>
+                <option value="planning">Planning</option>
+                <option value="in progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          <div className="relative flex-1 max-w-sm">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                placeholder="Search projects..."
+                className="w-full px-3 py-2 pr-8 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
+            />
+              {searchTerm && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-2 top-2 text-gray-400 hover:text-gray-600 transition-colors text-sm"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            {(statusFilter || searchTerm) && (
+              <button
+                onClick={clearFilters}
+                className="text-sm text-gray-500 hover:text-gray-700 underline"
+              >
+                Clear all filters
+              </button>
+            )}
+          </div>
+
       </div>
+      
       {(searchTerm && searchTerm.length >= 3) || statusFilter ? (
-        <div className="mb-4 text-sm text-gray-600">
+        <div className="mt-3 text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-lg">
           Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
           {statusFilter && ` with status "${statusFilter}"`}
           {searchTerm && searchTerm.length >= 3 && ` matching "${searchTerm}"`}
@@ -201,48 +206,76 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
           <p className="text-gray-500 text-lg mb-4">No projects yet</p>
         </div>
       ):(
-        <div className="grid gap-4">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="flex-1">
-                  <Link
-                    to={`/projects/${project.id}`}
-                    className="text-xl font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    {project.name}
-                  </Link>
-                  <p className="text-gray-600 mt-2 line-clamp-2">
-                    {project.description}
-                  </p>
+        <div className="space-y-6">
+            {groupedProjects.map(({ status, projects: statusProjects }) => {
+              const config = getStatusConfig(status as Project['status']);
+              return (
+                <div key={status} className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xl">{config.icon}</span>
+                    <h2 className="text-xl font-bold text-gray-800">
+                      {getStatusTitle(status)}
+                    </h2>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+                      {statusProjects.length}
+                    </span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {statusProjects.map((project) => {
+                      const projectConfig = getStatusConfig(project.status);
+                      return (
+                        <div
+                          key={project.id}
+                          className={`group relative bg-gradient-to-br ${projectConfig.gradient} border border-white/30 rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:-translate-y-1 border-l-4 ${projectConfig.accent}`}
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                          
+                          <div className="relative">
+                            <div className="flex justify-between items-start mb-2">
+                              <Link
+                                to={`/projects/${project.id}`}
+                                className="text-base font-bold text-gray-800 hover:text-blue-600 transition-colors group-hover:text-blue-600 line-clamp-1 flex-1 mr-2"
+                              >
+                                {project.name}
+                              </Link>
+                              <span className={`px-2 py-1 rounded-lg text-xs font-semibold ${projectConfig.color} flex-shrink-0`}>
+                                {project.status?.toUpperCase()}
+                              </span>
+                            </div>
+                            
+                            <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                              {project.description}
+                            </p>
+                            
+                            <div className="flex justify-between items-center">
+                              <div className="text-xs text-gray-500 flex items-center gap-1">
+                                <span>📅</span>
+                                {formatDate(project.startDate)}
+                              </div>
+                              
+                              <button
+                                onClick={() => {
+                                  if (confirm('Are you sure you want to delete this project?')) {
+                                    onDelete(project.id);
+                                  }
+                                }}
+                                className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 p-1 rounded transition-all duration-200 text-xs"
+                              >
+                                🗑️
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                    );
+                    })}
+                  </div>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusConfig(project.status)}`}>
-                  {project.status?.toUpperCase()}
-                </span>
-              </div>
-              
-              <div className="flex justify-between items-center text-sm text-gray-500">
-                <span>Start Date: {formatDate(project.startDate)}</span>
-                <button
-                    onClick={() => {
-                      if (confirm('Are you sure you want to delete this project?')) {
-                        onDelete(project.id);
-                      }
-                    }}
-                    className="text-red-600 hover:text-red-800 font-medium"
-                  >
-                    Delete
-                  </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-    </div>
-    </div>
+              );
+            })}
+          </div>
+        )}
+      </div> 
+    </div>  
   );
 };
