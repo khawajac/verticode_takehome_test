@@ -32,7 +32,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
     }
 
     if (!deadline) {
-      newErrors.deadline = 'Project deadline is required'
+      newErrors.deadline = 'Project deadline is required';
     }
 
     setErrors(newErrors);
@@ -138,6 +138,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit }) => {
             <input 
                 id="deadline"
                 type="date" 
+                value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
                 className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   errors.deadline ? 'border-red-500' : 'border-gray-300'

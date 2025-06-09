@@ -14,7 +14,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
   const [editedName, setEditedName] = useState(project.name);
   const [editedDescription, setEditedDescription] = useState(project.description);
   const [editedStartDate, setEditedStartDate] = useState(project.startDate);
-  const [editedDeadline, setEditedDeadline] = useState(project.deadline)
+  const [editedDeadline, setEditedDeadline] = useState(project.deadline); 
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-GB', {
@@ -103,7 +103,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
     setEditedName(project.name);
     setEditedDescription(project.description);
     setEditedStartDate(project.startDate);
-    setEditedDeadline(project.deadline)
+    setEditedDeadline(project.deadline); 
     setStatus(project.status);
     setIsEditing(false);
   };

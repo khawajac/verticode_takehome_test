@@ -335,7 +335,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                                 <span>📅</span>
                                 Start: {formatDate(project.startDate)}
                             </div>
-                            <div className="`flex items-center gap-1 ${overdueProject ? 'text-red-600 font-bold' : ''}`">
+                            <div className={`flex items-center gap-1 ${overdueProject ? 'text-red-600 font-bold' : ''}`}>
                               <span>🚨</span>
                               Due: {formatDate(project.deadline)}
                             </div>
