@@ -229,21 +229,42 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
             <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
               <span>🎯</span> Project Status
             </h2>
-            
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <span className={`px-4 py-2 rounded-full text-sm font-bold ${config.color} shadow-sm`}>
+
+            {isEditing ? (
+              <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as Project['status'])}
+              className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 
+              focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
+              >
+                <option value="planning">Planning</option>
+                <option value="in progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            ) : (
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <span className={`px-4 py-2 rounded-full text-sm font-bold ${config.color} shadow-sm`}>
                 {status?.replace('-', ' ').toUpperCase()}
-              </span>
-              
-              {status !== 'completed' && (
-                <button
+                </span>
+
+                {status === 'planning' && (
+                  <button
+                  onClick={() => handleStatusChange('in progress')}
+                  className={`${config.buttonSecondary} px-4 py-2 rounded-xl transition-all duration-200 hover:shadow-md text-sm font-medium`}
+                  >
+                    🚀 Start Project
+                  </button>
+                )}
+                {status === 'in progress' && (
+                  <button
                   onClick={() => handleStatusChange('completed')}
                   className={`${config.buttonSecondary} px-4 py-2 rounded-xl transition-all duration-200 hover:shadow-md text-sm font-medium`}
-                >
-                  ✓ Mark as Complete
-                </button>
-              )}
+                  >
+                    ✓ Mark as Complete
+                  </button>
+                )}
             </div>
+            )}
           </div>
 
           {status === 'completed' && (
