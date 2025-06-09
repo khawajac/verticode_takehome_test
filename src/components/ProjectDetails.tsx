@@ -215,7 +215,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
               <input
                 type="date"
                 value={editedDeadline}
-                onChange={(e) => setEditedStartDate(e.target.value)}
+                onChange={(e) => setEditedDeadline(e.target.value)}
                 className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
               />
             ) : (

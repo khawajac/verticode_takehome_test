@@ -10,6 +10,7 @@ interface ProjectsListProps {
 export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState<string>(''); 
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [deadlineFilter, setDeadlineFilter] = useState<string>(''); 
 
   const filteredProjects = useMemo(() => {
     let filtered = projects; 
@@ -18,6 +19,37 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
       filtered = filtered.filter(project => project.status === statusFilter);
     }
 
+    if(deadlineFilter){
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    
+    filtered = filtered.filter(project => {
+      const deadline = new Date(project.deadline);
+      const deadlineStr = project.deadline;
+        
+      switch (deadlineFilter) {
+        case 'overdue':
+          return deadline < today && project.status !== 'completed';
+        case 'due-today':
+          return deadlineStr === todayStr;
+        case 'due-this-week':
+          const weekFromNow = new Date(today);
+          weekFromNow.setDate(today.getDate() + 7);
+          return deadline >= today && deadline <= weekFromNow;
+        case 'due-this-month':
+          const monthFromNow = new Date(today);
+          monthFromNow.setMonth(today.getMonth() + 1);
+          return deadline >= today && deadline <= monthFromNow;
+        case 'due-future':
+          const nextMonth = new Date(today);
+          nextMonth.setMonth(today.getMonth() + 1);
+          return deadline > nextMonth;
+        default:
+          return true;
+      }
+    });
+  }
+
     if (searchTerm.trim() && searchTerm.trim().length >= 3) {
       const lowerCaseSearch = searchTerm.toLowerCase();
       filtered = filtered.filter(project => 
@@ -25,7 +57,8 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
       );
     }
     return filtered; 
-  }, [projects, searchTerm, statusFilter]); 
+  }, [projects, searchTerm, statusFilter, deadlineFilter]); 
+
 
   const groupedProjects = useMemo(() => {
     const statusOrder = ['planning', 'in progress', 'completed'];
@@ -85,8 +118,18 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
     });
   };
 
+  const isOverdue = (project: Project) => {
+    const today = new Date();
+    const deadline = new Date(project.deadline);
+    return deadline < today && project.status !== 'completed';
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value); 
+  }
+
+  const handleDeadlineFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDeadlineFilter(e.target.value);
   }
 
   const handleStatusFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -100,6 +143,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
   const clearFilters = () => {
     setSearchTerm('');
     setStatusFilter('');
+    setDeadlineFilter(''); 
   }
 
   const getStatusTitle = (status: string) => {
@@ -107,6 +151,16 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
            status.charAt(0).toUpperCase() + status.slice(1);
   };
 
+  const getDeadlineFilterLabel = () => {
+    switch (deadlineFilter) {
+      case 'overdue': return ' that are overdue';
+      case 'due-today': return ' due today';
+      case 'due-this-week': return ' due this week';
+      case 'due-this-month': return ' due this month';
+      case 'due-future': return ' due in the future';
+      default: return '';
+    }
+  }
   return (
 
       <div className="max-w-6xl mx-auto p-6">
@@ -147,6 +201,26 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                 <option value="completed">Completed</option>
               </select>
             </div>
+
+            <div className="flex items-center gap-3">
+              <label htmlFor="deadline-filter" className="text-sm font-medium text-gray-700 whitespace-nowrap">
+                Deadline:
+              </label>
+              <select
+                id="deadline-filter"
+                value={deadlineFilter}
+                onChange={handleDeadlineFilterChange}
+                className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
+              >
+                <option value="">All Deadlines</option>
+                <option value="overdue">⚠️ Overdue</option>
+                <option value="due-today">📅 Due Today</option>
+                <option value="due-this-week">🗓️ Due This Week</option>
+                <option value="due-this-month">📆 Due This Month</option>
+                <option value="due-future">🔮 Due Later</option>
+              </select>
+            </div>
+
           <div className="relative flex-1 max-w-sm">
               <input
                 type="text"
@@ -164,7 +238,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                 </button>
               )}
             </div>
-            {(statusFilter || searchTerm) && (
+            {(statusFilter || searchTerm || deadlineFilter) && (
               <button
                 onClick={clearFilters}
                 className="text-sm text-gray-500 hover:text-gray-700 underline"
@@ -176,10 +250,11 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
 
       </div>
       
-      {(searchTerm && searchTerm.length >= 3) || statusFilter ? (
+      {(searchTerm && searchTerm.length >= 3) || statusFilter  || deadlineFilter ? (
         <div className="mt-3 text-sm text-gray-600 bg-blue-50 px-3 py-1 rounded-lg">
           Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}
           {statusFilter && ` with status "${statusFilter}"`}
+          {deadlineFilter && getDeadlineFilterLabel()}
           {searchTerm && searchTerm.length >= 3 && ` matching "${searchTerm}"`}
         </div>
       ) : null}
@@ -207,15 +282,16 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
       ):(
         <div className="space-y-6">
             {groupedProjects.map(({ status, projects: statusProjects }) => {
-              const config = getStatusConfig(status as Project['status']);
+              const projectConfig = getStatusConfig(status as Project['status']);
               return (
-                <div key={status} className="space-y-3">
+                <div 
+                key={status} className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <span className="text-xl">{config.icon}</span>
+                    <span className="text-xl">{projectConfig.icon}</span>
                     <h2 className="text-xl font-bold text-gray-800">
                       {getStatusTitle(status)}
                     </h2>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${projectConfig.color}`}>
                       {statusProjects.length}
                     </span>
                   </div>
@@ -223,13 +299,20 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {statusProjects.map((project) => {
                       const projectConfig = getStatusConfig(project.status);
+                      const overdueProject = isOverdue(project)
                       return (
                         <div
                           key={project.id}
-                          className={`group relative bg-gradient-to-br ${projectConfig.gradient} border border-white/30 rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:-translate-y-1 border-l-4 ${projectConfig.accent}`}
+                          className={`group relative bg-gradient-to-br ${projectConfig.gradient} border border-white/30 
+                          rounded-xl p-4 transition-all duration-300 hover:scale-105 hover:shadow-xl 
+                          hover:-translate-y-1 border-l-4 ${projectConfig.accent}${overdueProject ? ' ring-2 ring-red-200' : ''}`}
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 to-purple-400/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                          
+                          {overdueProject && (
+                            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold shadow-lg">
+                              OVERDUE
+                            </div>
+                          )}
                           <div className="relative">
                             <div className="flex justify-between items-start mb-2">
                               <Link
@@ -252,7 +335,7 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                                 <span>📅</span>
                                 Start: {formatDate(project.startDate)}
                             </div>
-                            <div className="flex items-center gap-1">
+                            <div className="`flex items-center gap-1 ${overdueProject ? 'text-red-600 font-bold' : ''}`">
                               <span>🚨</span>
                               Due: {formatDate(project.deadline)}
                             </div>
