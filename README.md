@@ -18,7 +18,7 @@ This task is front end only, which means you don't need a database and don't nee
 - Projects List page with full project management
 - React Router for navigation
 - Full CRUD operations (Create, Read, Update, Delete projects)
-- Search and filter functionality for project discovery
+- Search and filter functionality for project discovery, for status and deadline
 - Clean, responsive UI design
 
 Please see the images in the public folder showing the UI evolution from the original MVP to the current enhanced version.
@@ -27,7 +27,6 @@ Please see the images in the public folder showing the UI evolution from the ori
 Given more time or further brief from a client, I would have liked to add:
 - Project priority levels (1-4) with visual indicators
 - Dark/light mode toggle for better user experience
-- Project deadlines with deadline-based filtering
 - Drag and drop functionality for easier project reordering without needing to edit
 
 ## Typescript
