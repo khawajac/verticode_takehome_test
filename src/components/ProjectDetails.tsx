@@ -14,6 +14,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
   const [editedName, setEditedName] = useState(project.name);
   const [editedDescription, setEditedDescription] = useState(project.description);
   const [editedStartDate, setEditedStartDate] = useState(project.startDate);
+  const [editedDeadline, setEditedDeadline] = useState(project.deadline)
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-GB', {
@@ -91,6 +92,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
       name: editedName,
       description: editedDescription,
       startDate: editedStartDate,
+      deadline: editedDeadline,
       status: status
     };
     onUpdate(updatedProject);
@@ -101,6 +103,7 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
     setEditedName(project.name);
     setEditedDescription(project.description);
     setEditedStartDate(project.startDate);
+    setEditedDeadline(project.deadline)
     setStatus(project.status);
     setIsEditing(false);
   };
@@ -200,6 +203,24 @@ export const ProjectDetails: React.FC<ProjectDetailsProps> = ({ project, onUpdat
             ) : (
               <div className="bg-white/50 rounded-xl p-4 border border-white/30">
                 <p className="text-lg font-medium text-gray-800">{formatDate(new Date(project.startDate))}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span>🚨</span> Deadline
+            </h2>
+            {isEditing ? (
+              <input
+                type="date"
+                value={editedDeadline}
+                onChange={(e) => setEditedStartDate(e.target.value)}
+                className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200"
+              />
+            ) : (
+              <div className="bg-white/50 rounded-xl p-4 border border-white/30">
+                <p className="text-lg font-medium text-gray-800">{formatDate(new Date(project.deadline))}</p>
               </div>
             )}
           </div>

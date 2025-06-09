@@ -247,11 +247,15 @@ export const ProjectsList: React.FC<ProjectsListProps> = ({ projects, onDelete }
                               {project.description}
                             </p>
                             
-                            <div className="flex justify-between items-center">
-                              <div className="text-xs text-gray-500 flex items-center gap-1">
+                            <div className="text-xs text-gray-500 space-y-1">
+                              <div className="flex items-center gap-1">
                                 <span>📅</span>
-                                {formatDate(project.startDate)}
-                              </div>
+                                Start: {formatDate(project.startDate)}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <span>🚨</span>
+                              Due: {formatDate(project.deadline)}
+                            </div>
                               
                               <button
                                 onClick={() => {
